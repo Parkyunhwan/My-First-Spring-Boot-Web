@@ -17,13 +17,13 @@ public class Board implements Serializable {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본 키가 자동 할당되도록 설정하며, 키 생성을 데이터베이스에 위임한다(IDENTITY).
-    private Long id;
+    private Long idx;
 
     @Column
     private String title;
 
     @Column
-    private String subtitle;
+    private String subTitle;
 
     @Column
     private String content;
@@ -42,10 +42,10 @@ public class Board implements Serializable {
     private User user;
 
     @Builder
-    public Board(String title, String subtitle, String content, BoardType boardType, LocalDateTime createdDate,
+    public Board(String title, String subTitle, String content, BoardType boardType, LocalDateTime createdDate,
                  LocalDateTime updatedDate, User user) {
         this.title = title;
-        this.subtitle = subtitle;
+        this.subTitle = subTitle;
         this.content = content;
         this.boardType = boardType;
         this.createdDate = createdDate;
