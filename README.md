@@ -8,8 +8,8 @@
 
 ### 📖 Chapter04 : Spring Boot Web
 
-- **Commit Message** : 210129 Fin. Chapter04 SpringBootMVC
-- **Commit ID**             : 3a08400ee352a50945dd00563557c28901d8fcba
+- **Commit Message** : Complete. Chapter04 SpringBoot Web
+- **Commit ID**             : 2ae4e6de8c298e00fc4b4dfccaef46bf15bc1069
 
 `git reset`을 사용해 Chapter04 완료 시점의 코드를 볼수 있습니다. 
 
