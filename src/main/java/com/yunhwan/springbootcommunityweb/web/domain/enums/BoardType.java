@@ -1,4 +1,4 @@
-package com.yunhwan.springbootcommunityweb.web.domain;
+package com.yunhwan.springbootcommunityweb.web.domain.enums;
 
 public enum BoardType {
     notice("공지사항"),

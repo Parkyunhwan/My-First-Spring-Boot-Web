@@ -1,7 +1,7 @@
 package com.yunhwan.springbootcommunityweb;
 
 import com.yunhwan.springbootcommunityweb.web.domain.Board;
-import com.yunhwan.springbootcommunityweb.web.domain.BoardType;
+import com.yunhwan.springbootcommunityweb.web.domain.enums.BoardType;
 import com.yunhwan.springbootcommunityweb.web.domain.User;
 import com.yunhwan.springbootcommunityweb.web.repository.BoardRepository;
 import com.yunhwan.springbootcommunityweb.web.repository.UserRepository;
@@ -10,7 +10,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 

@@ -1,7 +1,7 @@
 package com.yunhwan.springbootcommunityweb.web;
 
 import com.yunhwan.springbootcommunityweb.web.domain.Board;
-import com.yunhwan.springbootcommunityweb.web.domain.BoardType;
+import com.yunhwan.springbootcommunityweb.web.domain.enums.BoardType;
 import com.yunhwan.springbootcommunityweb.web.domain.User;
 import com.yunhwan.springbootcommunityweb.web.repository.BoardRepository;
 import com.yunhwan.springbootcommunityweb.web.repository.UserRepository;

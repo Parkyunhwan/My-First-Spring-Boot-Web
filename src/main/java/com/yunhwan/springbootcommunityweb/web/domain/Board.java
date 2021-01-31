@@ -1,5 +1,6 @@
 package com.yunhwan.springbootcommunityweb.web.domain;
 
+import com.yunhwan.springbootcommunityweb.web.domain.enums.BoardType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

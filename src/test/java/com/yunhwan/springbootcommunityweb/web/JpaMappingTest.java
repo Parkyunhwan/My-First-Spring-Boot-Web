@@ -1,11 +1,10 @@
 package com.yunhwan.springbootcommunityweb.web;
 
 import com.yunhwan.springbootcommunityweb.web.domain.Board;
-import com.yunhwan.springbootcommunityweb.web.domain.BoardType;
+import com.yunhwan.springbootcommunityweb.web.domain.enums.BoardType;
 import com.yunhwan.springbootcommunityweb.web.domain.User;
 import com.yunhwan.springbootcommunityweb.web.repository.BoardRepository;
 import com.yunhwan.springbootcommunityweb.web.repository.UserRepository;
-import org.apache.tomcat.jni.Local;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +41,7 @@ public class JpaMappingTest {
 
         boardRepository.save(Board.builder()
                 .title(boardTestTitle)
-                .subtitle("서브 타이틀")
+                .subTitle("서브 타이틀")
                 .content("콘텐트")
                 .boardType(BoardType.free)
                 .createdDate(LocalDateTime.now())
@@ -62,7 +61,7 @@ public class JpaMappingTest {
         Board board = boardRepository.findByUser(user);
 
         assertThat(board.getTitle(), is(boardTestTitle));
-        assertThat(board.getSubtitle(), is("서브 타이틀"));
+        assertThat(board.getSubTitle(), is("서브 타이틀"));
         assertThat(board.getContent(), is("콘텐트"));
         assertThat(board.getBoardType(), is(BoardType.free));
     }
