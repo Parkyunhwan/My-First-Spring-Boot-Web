@@ -1,5 +1,6 @@
 package com.yunhwan.springbootcommunityweb.web.domain;
 
+import com.yunhwan.springbootcommunityweb.web.domain.enums.SocialType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,16 +32,26 @@ public class User implements Serializable {
     private String email;
 
     @Column
+    private String principal;
+
+    @Column
+    @Enumerated(EnumType.STRING) // 소셜타입을 유저 테이블의 속성을 볼수 있다. String이므로 문자열자체가 DB에 저장됨
+    private SocialType socialType;
+
+    @Column
     private LocalDateTime createdDate;
 
     @Column
     private LocalDateTime updatedDate;
 
     @Builder
-    public User(String name, String password, String email, LocalDateTime createdDate, LocalDateTime updatedDate) {
+    public User(String name, String password, String email, String principal, SocialType socialType
+                ,LocalDateTime createdDate, LocalDateTime updatedDate) {
         this.name= name;
         this.password = password;
         this.email = email;
+        this.principal = principal;
+        this.socialType = socialType;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
     }
