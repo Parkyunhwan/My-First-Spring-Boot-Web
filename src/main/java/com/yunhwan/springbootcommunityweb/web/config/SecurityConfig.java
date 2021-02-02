@@ -49,6 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()// HttpServletRequest 기반 설정
                 .antMatchers("/", "/login/**", "/css/**", "/images/**", "/js/**",
                         "/console/**").permitAll() // 요청 패턴을 리스트 형식으로 설정하며 누구나 접근할 수 있도록 허용합니다.
+                .antMatchers("/facebook").hasAuthority(FACEBOOK.getRoleType())
+                .antMatchers("/google").hasAuthority(GOOGLE.getRoleType()) // -> 해당 경로를 접근하기 위해서 필요한 권한 명시.
+                .antMatchers("/kakao").hasAuthority(KAKAO.getRoleType())
                 .anyRequest().authenticated() // 설정한 요청 이외의 리퀘스트 요청(anyRequest) -> 인증된 사용자만 요청 가능
                 .and()
 
