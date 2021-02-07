@@ -8,11 +8,16 @@
 
 ### 📖 Chapter04 : Spring Boot Web
 
-- **Commit Message** : Complete. Chapter04 SpringBoot Web
-- **Commit ID**             : 2ae4e6de8c298e00fc4b4dfccaef46bf15bc1069
-
-`git reset`을 사용해 Chapter04 완료 시점의 코드를 볼수 있습니다. 
+- **Tag Name** : Chapter04
+  
+해당 `Tag` 버전으로 `Chapter04` 완료 시점의 코드를 볼수 있습니다.
 
 ### 📖 Chapter05 : Spring Boot Security + OAuth2
+
+- **Tag Name** : Chapter05_SpringSecurity
+
+해당 `Tag` 버전으로 `Chapter05 SpringSecurity` 완료 시점의 코드를 볼수 있습니다. 
+
+### 📖 Chapter06 : Spring Boot Data REST
 
 진행 중..
