@@ -3,7 +3,6 @@ package com.yunhwan.springbootcommunityweb.web.controller;
 import com.yunhwan.springbootcommunityweb.web.annotation.SocialUser;
 import com.yunhwan.springbootcommunityweb.web.domain.User;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -24,7 +23,8 @@ public class LoginController {
     /*
     * 성공 시 리다이렉트 경로.
     * */
-    @GetMapping(value = "/{facebook|google|kakao}/complete")
+//1.5    @GetMapping(value = "/{facebook|google|kakao}/complete")
+    @GetMapping(value = "/loginSuccess")
     public String loginComplete(@SocialUser User user) {
     //public String loginComplete(HttpSession session) {
 

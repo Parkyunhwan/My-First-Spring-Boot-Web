@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @SpringBootApplication
-public class BootWebApplication extends WebMvcConfigurerAdapter {
+public class BootWebApplication implements WebMvcConfigurer {
 
     @Autowired
     private UserArgumentResolver userArgumentResolver;
