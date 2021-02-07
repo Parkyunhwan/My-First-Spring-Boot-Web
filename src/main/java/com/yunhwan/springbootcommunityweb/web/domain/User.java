@@ -31,11 +31,13 @@ public class User implements Serializable {
     @Column
     private String email;
 
+    // OAuth2 인증으로 제공받는 키값
     @Column
-    private String principal;
+    private String pincipal;
 
+    // 소셜 미디어로 인증받았는지 여부를 구분해주는 타입
     @Column
-    @Enumerated(EnumType.STRING) // 소셜타입을 유저 테이블의 속성을 볼수 있다. String이므로 문자열자체가 DB에 저장됨
+    @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
     @Column
@@ -45,12 +47,11 @@ public class User implements Serializable {
     private LocalDateTime updatedDate;
 
     @Builder
-    public User(String name, String password, String email, String principal, SocialType socialType
-                ,LocalDateTime createdDate, LocalDateTime updatedDate) {
-        this.name= name;
+    public User(String name, String password, String email, String pincipal, SocialType socialType, LocalDateTime createdDate, LocalDateTime updatedDate) {
+        this.name = name;
         this.password = password;
         this.email = email;
-        this.principal = principal;
+        this.pincipal = pincipal;
         this.socialType = socialType;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;

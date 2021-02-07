@@ -4,8 +4,7 @@ import java.util.Locale;
 
 public enum SocialType {
     FACEBOOK("facebook"),
-    GOOGLE("google"),
-    KAKAO("kakao");
+    GOOGLE("google");
 
     private final String ROLE_PREFIX = "ROLE_";
     private String name;
@@ -14,15 +13,11 @@ public enum SocialType {
         this.name = name;
     }
 
-    public String getRoleType() {
-        return ROLE_PREFIX + name.toUpperCase();
-    }
+    public String getRoleType() { return ROLE_PREFIX + name.toUpperCase(); }
 
-    public String getValue() {
-        return name;
-    }
+    public String getValue() { return name; }
 
     public boolean isEquals(String authority) {
-        return this.getRoleType().equals(authority);
+        return this.name.equals(authority);
     }
 }

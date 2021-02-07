@@ -25,18 +25,19 @@ public class BootWebApplication implements WebMvcConfigurer {
     @Autowired
     private UserArgumentResolver userArgumentResolver;
 
-    public static void main(String[] args) {
-        SpringApplication.run(BootWebApplication.class, args);
-    }
-
+    // HandlerMethodArgumentResolver 오버라이드에서 argumentResolvers에 userArgumentResolver를 등록
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(userArgumentResolver);
     }
 
+    public static void main(String[] args) {
+        SpringApplication.run(BootWebApplication.class, args);
+    }
+
     @Bean
-    public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository) {
-        return (args) -> {
+    public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository)throws Exception{
+        return(args) -> {
             User user = userRepository.save(User.builder()
                     .name("havi")
                     .password("test")
@@ -44,11 +45,11 @@ public class BootWebApplication implements WebMvcConfigurer {
                     .createdDate(LocalDateTime.now())
                     .build());
 
-            IntStream.rangeClosed(1, 200).forEach(index ->
+            IntStream.rangeClosed(1,200).forEach(index->
                     boardRepository.save(Board.builder()
                             .title("게시글"+index)
                             .subTitle("순서"+index)
-                            .content("컨텐츠")
+                            .content("콘텐츠")
                             .boardType(BoardType.free)
                             .createdDate(LocalDateTime.now())
                             .updatedDate(LocalDateTime.now())
