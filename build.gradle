@@ -24,8 +24,10 @@ repositories {
 }
 
 dependencies {
-    compile('org.springframework.security:spring-security-oauth2-client')
-    compile('org.springframework.security:spring-security-oauth2-jose')
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
+    testCompile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.1'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.security.oauth:spring-security-oauth2:2.1.2.RELEASE'
     compile('org.springframework.boot:spring-boot-starter-security')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

@@ -1,15 +1,24 @@
 package com.yunhwan.springbootcommunityweb.web.config;
 
+import com.yunhwan.springbootcommunityweb.web.oauth.CustomOAuth2Provider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.yunhwan.springbootcommunityweb.web.domain.enums.SocialType.*;
 
@@ -19,44 +28,58 @@ import static com.yunhwan.springbootcommunityweb.web.domain.enums.SocialType.*;
 * @ConfigurationProperties를 이용해 application.xxx설정 키 값을 묶어서 빈으로 등록할 수 있다.
 * */
 @Configuration
-// 웹 시큐리티 기능을 이용하겠다는 어노테이션
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    // 시큐리티 최적화 설정 함수 오바라이드
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         http
-                .authorizeRequests() // 인증 매커니즘 설정
-                .antMatchers("/", "/oauth2/**", "/login/**",  "/css/**", "/images/**", "/js/**", "/console/**").permitAll() // 요청 패턴을 리스트 형식으로 설정하고 접근을 허용할 곳 지정
+                .authorizeRequests()
+                .antMatchers("/", "/oauth2/**", "/login/**",  "/css/**", "/images/**", "/js/**", "/console/**").permitAll()
                 .antMatchers("/facebook").hasAuthority(FACEBOOK.getRoleType())
                 .antMatchers("/google").hasAuthority(GOOGLE.getRoleType())
-                .anyRequest().authenticated() // 설정한 요청 이외의 리퀘스트는 인증된 사용자만 허용되도록 변경
+                .antMatchers("/kakao").hasAuthority(KAKAO.getRoleType())
+                .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
-                .defaultSuccessUrl("/loginSuccess") // 로그인 성공 시 url
-                .failureUrl("/loginFailure") // 로그인 실패 시 url
+                .defaultSuccessUrl("/loginSuccess")
+                .failureUrl("/loginFailure")
                 .and()
                 .headers().frameOptions().disable()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")) // 인증되지 않는 사람이 적용되는 지점
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 .and()
                 .formLogin()
-                .successForwardUrl("/board/list") // 로그인 성공시의 포워딩 되는 url
+                .successForwardUrl("/board/list")
                 .and()
                 .logout()
-                .logoutUrl("/logout") // 로그아웃이 처리되는 url
-                .logoutSuccessUrl("/") // 로그아웃 성공 시 연결되는 url
-                .deleteCookies("JSESSIONID") // 로그아웃 시에 쿠키 삭제
-                .invalidateHttpSession(true) // 로그아웃 시에 세션 삭제
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
                 .and()
                 .addFilterBefore(filter, CsrfFilter.class)
                 .csrf().disable();
     }
 
-    // 페이스북과 구글 OAuth2 등록
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository(OAuth2ClientProperties oAuth2ClientProperties, @Value("${custom.oauth2.kakao.client-id}") String kakaoClientId) {
+        List<ClientRegistration> registrations = oAuth2ClientProperties.getRegistration().keySet().stream()
+                .map(client -> getRegistration(oAuth2ClientProperties, client))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        registrations.add(CustomOAuth2Provider.KAKAO.getBuilder("kakao")
+                .clientId(kakaoClientId)
+                .clientSecret("test") //필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
+                .jwkSetUri("test") //필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
+                .build());
+
+        return new InMemoryClientRegistrationRepository(registrations);
+    }
+
     private ClientRegistration getRegistration(OAuth2ClientProperties clientProperties, String client) {
         if ("google".equals(client)) {
             OAuth2ClientProperties.Registration registration = clientProperties.getRegistration().get("google");

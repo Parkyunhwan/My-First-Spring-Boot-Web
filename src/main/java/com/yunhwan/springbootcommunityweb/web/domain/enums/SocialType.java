@@ -1,10 +1,9 @@
 package com.yunhwan.springbootcommunityweb.web.domain.enums;
 
-import java.util.Locale;
-
 public enum SocialType {
     FACEBOOK("facebook"),
-    GOOGLE("google");
+    GOOGLE("google"),
+    KAKAO("kakao");
 
     private final String ROLE_PREFIX = "ROLE_";
     private String name;

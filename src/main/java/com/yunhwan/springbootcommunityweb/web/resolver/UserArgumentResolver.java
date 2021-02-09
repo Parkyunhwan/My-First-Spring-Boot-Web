@@ -5,6 +5,8 @@ import com.yunhwan.springbootcommunityweb.web.domain.User;
 import com.yunhwan.springbootcommunityweb.web.domain.enums.SocialType;
 import com.yunhwan.springbootcommunityweb.web.repository.UserRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -30,8 +32,8 @@ import static com.yunhwan.springbootcommunityweb.web.domain.enums.SocialType.*;
 // HandlerMethodArgumentResolver 를 상속하여 리졸버 정의
 @Component
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private UserRepository userRepository;
+    Logger logger = LoggerFactory.getLogger(getClass());
+    private final UserRepository userRepository;
 
     public UserArgumentResolver(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -42,7 +44,6 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         return parameter.getParameterAnnotation(SocialUser.class) != null && parameter.getParameterType().equals(User.class);
     }
 
-    // 세션을 확인하여 User 객체를 가져오는 함수
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession();
@@ -50,14 +51,17 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         return getUser(user, session);
     }
 
-    // 인증된 User 객체를 만들어 권한을 부여하는 함수
     private User getUser(User user, HttpSession session) {
         if(user == null) {
             try {
                 OAuth2AuthenticationToken authentication = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+                logger.info("ID " + String.valueOf(authentication.getAuthorizedClientRegistrationId()));
                 Map<String, Object> map = authentication.getPrincipal().getAttributes();
                 User convertUser = convertUser(authentication.getAuthorizedClientRegistrationId(), map);
-
+                logger.info(String.valueOf(convertUser));
+                logger.info(String.valueOf(convertUser.getEmail()));
+                logger.info(String.valueOf(convertUser.getName()));
+                logger.info(String.valueOf(convertUser.getName()));
                 user = userRepository.findByEmail(convertUser.getEmail());
                 if (user == null) { user = userRepository.save(convertUser); }
 
@@ -70,14 +74,13 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         return user;
     }
 
-    // 빌더를 사용하여 User 객체를 만들어주는 역할을 하는 함수
     private User convertUser(String authority, Map<String, Object> map) {
         if(FACEBOOK.isEquals(authority)) return getModernUser(FACEBOOK, map);
         else if(GOOGLE.isEquals(authority)) return getModernUser(GOOGLE, map);
+        else if(KAKAO.isEquals(authority)) return getKaKaoUser(map);
         return null;
     }
 
-    // FaceBook Gooogle의 공통 명명규칙을 가진 그룹으로 User를 매핑하는 함수
     private User getModernUser(SocialType socialType, Map<String, Object> map) {
         return User.builder()
                 .name(String.valueOf(map.get("name")))
@@ -88,7 +91,18 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                 .build();
     }
 
-    // 권한을 갖고 있는지 체크하는 함수
+    private User getKaKaoUser(Map<String, Object> map) {
+        Map<String, String> propertyMap = (HashMap<String, String>) map.get("properties");
+        HashMap<String, String> accountMap = (HashMap<String, String>) map.get("kakao_account");
+        return User.builder()
+                .name(propertyMap.get("nickname"))
+                .email(accountMap.get("email"))
+                .pincipal(String.valueOf(map.get("id")))
+                .socialType(KAKAO)
+                .createdDate(LocalDateTime.now())
+                .build();
+    }
+
     private void setRoleIfNotSame(User user, OAuth2AuthenticationToken authentication, Map<String, Object> map) {
         if(!authentication.getAuthorities().contains(new SimpleGrantedAuthority(user.getSocialType().getRoleType()))) {
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(map, "N/A", AuthorityUtils.createAuthorityList(user.getSocialType().getRoleType())));
