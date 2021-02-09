@@ -5,8 +5,6 @@ import com.yunhwan.springbootcommunityweb.web.domain.User;
 import com.yunhwan.springbootcommunityweb.web.domain.enums.SocialType;
 import com.yunhwan.springbootcommunityweb.web.repository.UserRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -32,7 +30,6 @@ import static com.yunhwan.springbootcommunityweb.web.domain.enums.SocialType.*;
 // HandlerMethodArgumentResolver 를 상속하여 리졸버 정의
 @Component
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
-    Logger logger = LoggerFactory.getLogger(getClass());
     private final UserRepository userRepository;
 
     public UserArgumentResolver(UserRepository userRepository) {
@@ -55,13 +52,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         if(user == null) {
             try {
                 OAuth2AuthenticationToken authentication = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-                logger.info("ID " + String.valueOf(authentication.getAuthorizedClientRegistrationId()));
                 Map<String, Object> map = authentication.getPrincipal().getAttributes();
                 User convertUser = convertUser(authentication.getAuthorizedClientRegistrationId(), map);
-                logger.info(String.valueOf(convertUser));
-                logger.info(String.valueOf(convertUser.getEmail()));
-                logger.info(String.valueOf(convertUser.getName()));
-                logger.info(String.valueOf(convertUser.getName()));
                 user = userRepository.findByEmail(convertUser.getEmail());
                 if (user == null) { user = userRepository.save(convertUser); }
 
